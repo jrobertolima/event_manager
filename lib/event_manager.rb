@@ -1,4 +1,4 @@
-#!c:\Users/88630447753/Developer/RailsInstaller/Ruby2.3.0/bin/ruby
+#!./Developer/RailsInstaller/Ruby2.3.0/bin/ruby
 require "csv"
 require "sunlight/congress" #an API to provide information on Members of USA Congress
 require "erb"
@@ -11,24 +11,17 @@ def clean_zipcode(zipcode)
 end
 
 def legislator_by_zipcode(zipcode)
-  legislators = Sunlight::Congress::Legislator.by_zipcode(zipcode) 
-
-  legislator_names =legislators.collect do |legislator|
-    "#{legislator.first_name} #{legislator.last_name}"
-  end
-
-  legislator_string = legislator_names.join(", ")
-
-end
+  Sunlight::Congress::Legislator.by_zipcode(zipcode) 
+ end
 
 puts "EventManager Initialized!"
 
-f_name = "event_attendees.csv"
+f_name = 'event_attendees.csv' 
 
 contents = CSV.open(f_name, headers: true, header_converters: :symbol) if File.exist? f_name
 
 template_letter = File.read("form_letter.erb")
-erb_template = ERB.new template_letter
+erb_template = ERB.new(template_letter)
 
 contents.each do |row|
   name = row[:first_name]
