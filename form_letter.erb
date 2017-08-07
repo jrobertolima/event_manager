@@ -3,7 +3,7 @@
     <title>Thank You!</title>
   </head>
   <body>
-    <h1>Thanks <%= name %>!</h1>
+    <h1>Thanks <%= name %>! Phone <%= phone_number %></h1>
     <p>Thanks for coming to our conference.  We couldn't have done it without you!</p>
 
     <p>
@@ -17,6 +17,7 @@
         <tr>
           <td><%= "#{legislator.first_name} #{legislator.last_name}" %></td>
           <td><%= "#{legislator.website}" %></td>
+          <td><%= "#{phone_number}" %></td>
         </tr>
       <% end %>
     </table>
