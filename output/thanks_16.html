@@ -3,7 +3,7 @@
     <title>Thank You!</title>
   </head>
   <body>
-    <h1>Thanks <%= name %>! Phone <%= phone_number %></h1>
+    <h1>Thanks Shannon! Phone 6033053000</h1>
     <p>Thanks for coming to our conference.  We couldn't have done it without you!</p>
 
     <p>
@@ -13,12 +13,22 @@
 
     <table>
     <tr><th>Name</th><th>Website</th></tr>
-      <% legislators.each do |legislator| %>
+      
         <tr>
-          <td><%= "#{legislator.first_name} #{legislator.last_name}" %></td>
-          <td><%= "#{legislator.website}" %></td>
+          <td>Margaret Hassan</td>
+          <td>https://www.hassan.senate.gov</td>
         </tr>
-      <% end %>
+      
+        <tr>
+          <td>Ann Kuster</td>
+          <td>http://kuster.house.gov</td>
+        </tr>
+      
+        <tr>
+          <td>Jeanne Shaheen</td>
+          <td>https://www.shaheen.senate.gov</td>
+        </tr>
+      
     </table>
   </body>
   </html>

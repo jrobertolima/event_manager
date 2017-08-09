@@ -6,11 +6,16 @@ require "erb"
 Sunlight::Congress.api_key = "e179a6973728c4dd3fb1204283aaccb5"
 
 def clean_phone(phone_number)
-  pn = phone_number.to_s.slice(0,11) 
-  if pn.length > 10 
-    pn.match(/^1/) ? pn.slice(1,11) : "bad number" 
-  end 
-end
+# get only numbers
+  pn = phone_number.gsub(/[^\d]/,"")
+# get numbers with size <= 11
+  if pn.length.between?(10,11) 
+    pn.match(/^1/) ? (pn.length == 11 ? pn = pn.slice(1,11) : pn = "bad number") : pn
+  else
+    pn = "bad number"
+  end
+  return pn
+end 
 
 def clean_zipcode(zipcode)   
 #normalizing zipcodes
@@ -43,7 +48,7 @@ contents.each do |row|
   id = row[0] 
   name = row[:first_name]
   zipcode = clean_zipcode(row[:zipcode])
-  phone_number =  clean_phone(row[:phone_number])
+  phone_number =  clean_phone(row[:homephone])
   legislators = legislator_by_zipcode(zipcode)
 
   form_letter = erb_template.result(binding) 
