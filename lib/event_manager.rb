@@ -5,6 +5,13 @@ require "erb"
 
 Sunlight::Congress.api_key = "e179a6973728c4dd3fb1204283aaccb5"
 
+def clean_phone(phone_number)
+  pn = phone_number.to_s.slice(0,11) 
+  if pn.length > 10 
+    pn.match(/^1/) ? pn.slice(1,11) : "bad number" 
+  end 
+end
+
 def clean_zipcode(zipcode)   
 #normalizing zipcodes
   zipcode.to_s.rjust(5,"0").slice(0,5)   
@@ -36,6 +43,7 @@ contents.each do |row|
   id = row[0] 
   name = row[:first_name]
   zipcode = clean_zipcode(row[:zipcode])
+  phone_number =  clean_phone(row[:phone_number])
   legislators = legislator_by_zipcode(zipcode)
 
   form_letter = erb_template.result(binding) 
