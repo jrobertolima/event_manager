@@ -9,13 +9,15 @@ def clean_phone(phone_number)
 # get only numbers
   pn = phone_number.gsub(/[^\d]/,"")
 # get numbers with size <= 11
-  if pn.length.between?(10,11) 
-    pn.match(/^1/) ? (pn.length == 11 ? pn = pn.slice(1,11) : pn = "bad number") : pn
+  if pn =~ /^(\d{3,4})(\d{3})(\d{4})$/
+    p1 = $1 #deal with 3 or 4 initial characters 
+    p1.size == 4 ? (p1[0] == '1' ? p1 = p1.slice(1,4) : pn = "bad number") : p1	
+    pn = "(#{p1})#{$2}-#{$3}" unless pn == "bad number"
   else
     pn = "bad number"
   end
-  return pn
-end 
+  return pn  
+end
 
 def clean_zipcode(zipcode)   
 #normalizing zipcodes
