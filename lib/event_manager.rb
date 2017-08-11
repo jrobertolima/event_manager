@@ -2,8 +2,14 @@
 require "csv"
 require "sunlight/congress" #an API to provide information on Members of USA Congress
 require "erb"
+require "chronic" 
 
 Sunlight::Congress.api_key = "e179a6973728c4dd3fb1204283aaccb5"
+
+def time_target(date)
+  return (Chronic.parse(date).hour)
+end
+
 
 def clean_phone(phone_number)
 # get only numbers
@@ -28,6 +34,12 @@ def legislator_by_zipcode(zipcode)
   Sunlight::Congress::Legislator.by_zipcode(zipcode) 
  end
 
+def print_hash(hash)
+  hash = hash.sort_by { |a,b| b}
+  hash.reverse!
+  hash.each { |hour, n| puts "#{hour.to_s} #{n.to_s}"}
+end 
+
 def save_form(id, form_letter)
   Dir.mkdir("output") unless Dir.exist? "output"
   filename = File.join("output","thanks_#{id}.html")
@@ -45,6 +57,7 @@ contents = CSV.open(f_name, headers: true, header_converters: :symbol) if File.e
 
 template_letter = File.read("form_letter.erb")
 erb_template = ERB.new(template_letter)
+reg_date = Hash.new(0) 
 
 contents.each do |row|
   id = row[0] 
@@ -52,10 +65,10 @@ contents.each do |row|
   zipcode = clean_zipcode(row[:zipcode])
   phone_number =  clean_phone(row[:homephone])
   legislators = legislator_by_zipcode(zipcode)
-
+  reg_date[time_target(row[:regdate])] +=1
   form_letter = erb_template.result(binding) 
   
   save_form(id, form_letter)
 end   
-   
+print_hash(reg_date)   
 
