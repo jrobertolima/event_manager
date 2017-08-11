@@ -1,0 +1,35 @@
+<html>
+  <head>
+    <title>Estatíscas do evento!</title>
+  </head>
+  <body>
+    <h1>Best times</h1>
+    <p>Hours with more registration events</p>
+    <table>
+    <tr><th>Hour of the day</th><th>Number of registration</th></tr>
+		<% reg_date = reg_date.sort_by { |hour, qnt| qnt} %>
+		<% reg_date.reverse! %>
+		<% reg_date.each do |hour, qnt| %>	
+			<tr>
+			  <td><%= "#{hour}" %></td>
+			  <td><%= "#{qnt}" %></td>
+			</tr>
+		<% end %>
+    </table>
+    <p> </p>
+	
+    <table>
+    <tr><th>Days</th><th>Number of registration</th></tr>
+		<% day_date = day_date.sort_by { |day, qnt| qnt} %>
+		<% day_date.reverse! %>
+		<% day_date.each do |day, qnt| %>	
+			<tr>
+			  <td><%= "#{day}" %></td>
+			  <td><%= "#{qnt}" %></td>
+			</tr>
+		<% end %>
+    </table>
+  </body>
+  </html>
+  
+  

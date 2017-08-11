@@ -37,7 +37,7 @@ def legislator_by_zipcode(zipcode)
 def print_hash(hash)
   hash = hash.sort_by { |a,b| b}
   hash.reverse!
-  hash.each { |hour, n| puts "#{hour.to_s} #{n.to_s}"}
+  hash.each { |hour, n| "#{hour.to_s} #{n.to_s}"}
 end 
 
 def save_form(id, form_letter)
@@ -49,6 +49,12 @@ def save_form(id, form_letter)
   end
 end 
 
+def save_stat(template_statistics)
+  Dir.mkdir("statistics") unless Dir.exist? "statistics"
+  filename = File.join("statistics","statistics.html")
+  
+  File.open(filename,'w') { |file| file.puts template_statistics }
+end
 puts "EventManager Initialized!"
 
 f_name = 'event_attendees.csv' 
@@ -56,19 +62,36 @@ f_name = 'event_attendees.csv'
 contents = CSV.open(f_name, headers: true, header_converters: :symbol) if File.exist? f_name
 
 template_letter = File.read("form_letter.erb")
-erb_template = ERB.new(template_letter)
+template_statistics = File.read("statistics.erb")
+
+
+erb_letter = ERB.new(template_letter)
+erb_statistics = ERB.new(template_statistics)
+
 reg_date = Hash.new(0) 
+day_date = Hash.new(0)
 
 contents.each do |row|
   id = row[0] 
   name = row[:first_name]
+  date = row[:regdate]
   zipcode = clean_zipcode(row[:zipcode])
   phone_number =  clean_phone(row[:homephone])
   legislators = legislator_by_zipcode(zipcode)
-  reg_date[time_target(row[:regdate])] +=1
-  form_letter = erb_template.result(binding) 
+  reg_date[time_target(date)] +=1
+  day_date[(Chronic.parse(date).day)] += 1
+  template_letter = erb_letter.result(binding) 
   
-  save_form(id, form_letter)
-end   
+  save_form(id, template_letter)
+end 
+
+template_statistics = erb_statistics.result(binding) 
+save_stat(template_statistics)
+
+=begin  
+puts "Printing time"
 print_hash(reg_date)   
+puts "Printing day"
+print_hash(day_date)   
+=end
 
